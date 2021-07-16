@@ -4,7 +4,7 @@
             <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            ADD_BRAND_PRODUCT
+                            EDIT_brand_PRODUCT
                         </header>
                         <div class="panel-body">
                                 <?php
@@ -14,28 +14,22 @@
                                         Session::put('message',null);
                                     }
                                 ?>
+                                @foreach($edit_brand_product as $key=>$ed_value)
                             <div class="position-center">
-                                <form role="form" action="{{URL::to('/save_brand_product')}}" method="post">
+                                <form role="form" action="{{URL::to('/update_brand_product/'.$ed_value->Brand_id)}}" method="post">
                                     {{csrf_field()}}
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Name</label>
-                                    <input type="text" name="brand_product_name" class="form-control" id="exampleInputEmail1" placeholder="Enter category product">
+                                    <input type="text" value="{{$ed_value->Brand_name}}" name="brand_product_name" class="form-control" id="exampleInputEmail1">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Description</label>
-                                    <textarea style="resize: none" rows="5" class="form-control" name="Description" id="exampleInputPassword1" placeholder="Description"></textarea>
+                                    <textarea style="resize: none" rows="5" class="form-control" name="Description" id="exampleInputPassword1">{{$ed_value->Brand_desc}}</textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleInputFile">Display</label>
-                                   <select name="brand_product_status" class="form-control input-sm m-bot15">
-                                        <option value="0">Hidden</option>
-                                        <option value="1">Show</option>
-                                    </select>
-                                </div>
-                                <button type="submit" name="btnBrand" class="btn btn-info">Add</button>
+                                <button type="submit" name="update_brand" class="btn btn-info">Update</button>
                             </form>
                             </div>
-
+                            @endforeach
                         </div>
                     </section>
 

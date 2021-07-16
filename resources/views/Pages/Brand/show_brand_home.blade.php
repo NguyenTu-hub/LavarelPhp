@@ -1,8 +1,8 @@
 @extends('welcome')
 @section('content')
 <div class="features_items"><!--features_items-->
-                        <h2 class="title text-center">New Items</h2>
-                        @foreach($all_product as $key=>$pro)
+                        <h2 class="title text-center">Products for {{$br->Brand_name}}</h2>
+                        @foreach($pro as $key=>$pro)
                         <div class="col-sm-4">
                             <div class="product-image-wrapper">
                                 <div class="single-products">
@@ -12,13 +12,6 @@
                                             <p>{{$pro->Product_name}}</p>
                                             <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
                                         </div>
-                                        {{-- <div class="product-overlay">
-                                            <div class="overlay-content">
-                                                <h2>{{$pro->Product_price}}VND</h2>
-                                                <p>{{$pro->Product_name}}</p>
-                                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                            </div>
-                                        </div> --}}
                                 </div>
                                 <div class="choose">
                                     <ul class="nav nav-pills nav-justified">

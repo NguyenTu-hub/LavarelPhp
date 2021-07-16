@@ -11,57 +11,89 @@ session_start();
 
 class BrandProduct extends Controller
 {
+      public function AuthenLogin()
+    {
+        $admin_id=Session::get('admin_id');
+        if($admin_id)
+        {
+            redirect::to('admin.dashboard');
+        }
+        else
+        {
+            redirect::to('login')->send();
+        }
+    }
     public function add_brand()
     {
+        $this->AuthenLogin();
         return view('admin.add_brand_product');
     }
-    public function all_category()
+    public function all_brand()
     {
-        $all_category_product= DB::table('tbl_category_product')->get();
-        $manager_category_product=view('admin.all_category_product')->with('all_category_product',$all_category_product);
-        return view('admin_layout')->with('admin.all_category_product',$manager_category_product);
+        $this->AuthenLogin();
+        $all_brand_product= DB::table('tbl_brand')->get();
+        $manager_brand_product=view('admin.all_brand_product')->with('all_brand_product',$all_brand_product);
+        return view('admin_layout')->with('admin.all_brand_product',$manager_brand_product);
     }
-    public function save_category_product(Request $request)
+    public function save_brand_product(Request $request)
     {
         $data=array();
-        $data['category_name']=$request->catergory_product_name;
-        $data['category_desc']=$request->Description;
-        $data['category_status']=$request->category_product_status;
-        DB::table('tbl_category_product')->insert($data);
+        $data['Brand_name']=$request->brand_product_name;
+        $data['Brand_desc']=$request->Description;
+        $data['Brand_status']=$request->brand_product_status;
+        DB::table('tbl_brand')->insert($data);
         Session::put('message','Success!');
-        return Redirect::to('addCategory');
+        return Redirect::to('addBrand');
     }
-    public function unactive($category_id)
+    public function unactive_brand($brand_id)
     {
-        DB::table('tbl_category_product')->where('category_id',$category_id)->update(['category_status'=>1]);
-        return Redirect::to('listCategory');
+        DB::table('tbl_Brand')->where('Brand_id',$brand_id)->update(['Brand_status'=>1]);
+        return Redirect::to('listBrand');
     }
-     public function active($category_id)
+     public function active_brand($brand_id)
     {
-        DB::table('tbl_category_product')->where('category_id',$category_id)->update(['category_status'=>0]);
-        return Redirect::to('listCategory');
+        DB::table('tbl_Brand')->where('Brand_id',$brand_id)->update(['Brand_status'=>0]);
+        return Redirect::to('listBrand');
     }
-    public function edit_category($category_id)
+    public function edit_brand($brand_id)
     {
-        $edit_category_product= DB::table('tbl_category_product')->where('category_id',$category_id)->get();
-        $manager_category_product=view('admin.edit_category_product')->with('edit_category_product',$edit_category_product);
-        return view('admin_layout')->with('admin.all_category_product',$manager_category_product);
+        $this->AuthenLogin();
+        $edit_brand_product= DB::table('tbl_Brand')->where('Brand_id',$brand_id)->get();
+        $manager_brand_product=view('admin.edit_brand_product')->with('edit_brand_product',$edit_brand_product);
+        return view('admin_layout')->with('admin.all_brand_product',$manager_brand_product);
     }
-    public function update_category_product(Request $request,$category_id)
+    public function update_brand_product(Request $request,$brand_id)
     {
+        $this->AuthenLogin();
         $data=array();
-        $data['category_name']=$request->catergory_product_name;
-        $data['category_desc']=$request->Description;
-        DB::table('tbl_category_product')->where('category_id',$category_id)->update($data);
+        $data['Brand_name']=$request->brand_product_name;
+        $data['Brand_desc']=$request->Description;
+        DB::table('tbl_Brand')->where('Brand_id',$brand_id)->update($data);
         Session::put('message','Success!');
-        return Redirect::to('listCategory');
+        return Redirect::to('listBrand');
 
     }
 
-     public function delete_category($category_id)
+     public function delete_brand($brand_id)
     {
-        DB::table('tbl_category_product')->where('category_id',$category_id)->delete();
+        $this->AuthenLogin();
+        DB::table('tbl_Brand')->where('Brand_id',$brand_id)->delete();
         Session::put('message','Deleted Success!');
-        return Redirect::to('listCategory');
+        return Redirect::to('listBrand');
+    }
+    //end function admin
+      public function showBrand_home($brand_id)
+    {
+          $cate_product=DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
+            $brand_product=DB::table('tbl_Brand')->where('Brand_status','0')->orderby('Brand_id','desc')->get();
+            $brand_name=DB::table('tbl_Brand')->where('Brand_id',$brand_id)->first();
+         $Brand_by_id=DB::table('tbl_product')->join('tbl_Brand','tbl_product.Brand_id',
+            '=','tbl_Brand.Brand_id')->where('tbl_product.Brand_id',$brand_id)->get();
+        return view('Pages.Brand.show_brand_home')
+        ->with('category',$cate_product)
+        ->with('Brand',$brand_product)
+        ->with('pro',$Brand_by_id)
+        ->with('br',$brand_name);
+
     }
 }

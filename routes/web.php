@@ -15,8 +15,12 @@ use Illuminate\Support\Facades\Route;
 //Client
 Route::get('/','HomeController@index');
 Route::get('/home','HomeController@index');
-
+//Category_product
+Route::get('/category/{category_id}','CategoryProduct@showCategory_home');
+//Brand_product
+Route::get('/brand/{brand_id}','BrandProduct@showBrand_home');
 //Admin
+Route::get('/dashboard','loginController@showdashboard');
 Route::get('login','loginController@index');
 Route::get('/logout','loginController@logout');
 Route::post('/User_Dashboard','loginController@dashboard');
@@ -39,8 +43,21 @@ Route::get('listBrand','BrandProduct@all_brand');
 Route::get('editBrand/{brand_id}','BrandProduct@edit_brand');
 Route::get('deleteBrand/{brand_id}','BrandProduct@delete_brand');
 
-Route::get('/unactive/{brand_id}','BrandProduct@unactive');
-Route::get('/active/{brand_id}','BrandProduct@active');
+Route::get('/unactive_brand/{brand_id}','BrandProduct@unactive_brand');
+Route::get('/active_brand/{brand_id}','BrandProduct@active_brand');
 
 Route::post('/save_brand_product','BrandProduct@save_brand_product');
 Route::post('/update_brand_product/{brand_id}','BrandProduct@update_brand_product');
+
+//Product
+
+Route::get('addProduct','ProductController@add_product');
+Route::get('listProduct','ProductController@all_product');
+Route::get('editProduct/{product_id}','ProductController@edit_product');
+Route::get('deleteProduct/{Product_id}','ProductController@delete_product');
+
+Route::get('/unactive_Product/{brand_id}','ProductController@unactive_product');
+Route::get('/active_Product/{brand_id}','ProductController@active_product');
+
+Route::post('/save_product','ProductController@save_product');
+Route::post('/update_product/{Product_id}','ProductController@update_product');
