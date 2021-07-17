@@ -19,6 +19,8 @@ Route::get('/home','HomeController@index');
 Route::get('/category/{category_id}','CategoryProduct@showCategory_home');
 //Brand_product
 Route::get('/brand/{brand_id}','BrandProduct@showBrand_home');
+//detail_product
+Route::get('//detail_product/{product_id}','ProductController@detail_product');
 //Admin
 Route::get('/dashboard','loginController@showdashboard');
 Route::get('login','loginController@index');
@@ -61,3 +63,5 @@ Route::get('/active_Product/{brand_id}','ProductController@active_product');
 
 Route::post('/save_product','ProductController@save_product');
 Route::post('/update_product/{Product_id}','ProductController@update_product');
+//cart
+Route::post('/save_cart','CartController@save_cart');

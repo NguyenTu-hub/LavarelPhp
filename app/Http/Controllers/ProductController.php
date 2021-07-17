@@ -125,4 +125,29 @@ class ProductController extends Controller
         Session::put('message','Deleted Success!');
         return Redirect::to('listProduct');
     }
+    //end function admin
+    public function detail_product($product_id)
+    {
+        $cate_product=DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
+        $brand_product=DB::table('tbl_Brand')->where('Brand_status','0')->orderby('Brand_id','desc')->get();
+        $detail_product=DB::table('tbl_product')
+        ->join('tbl_category_product','tbl_category_product.category_id','=','tbl_product.Catergory_id')
+        ->join('tbl_Brand','tbl_Brand.Brand_id','=','tbl_product.Brand_id')
+        ->where('tbl_product.Product_id',$product_id)->get(); 
+
+        foreach($detail_product as $key=>$value)
+        {
+            $Brand_id=$value->Brand_id;
+        }
+
+        $related_products=DB::table('tbl_product')
+        ->join('tbl_category_product','tbl_category_product.category_id','=','tbl_product.Catergory_id')
+        ->join('tbl_Brand','tbl_Brand.Brand_id','=','tbl_product.Brand_id')
+        ->where('tbl_Brand.Brand_id',$Brand_id)->limit(3)->get(); 
+        return view('Pages.products.show_detail')
+        ->with('category',$cate_product)
+        ->with('Brand',$brand_product)
+        ->with('pro',$detail_product)
+        ->with('related',$related_products);
+    }
 }
