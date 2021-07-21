@@ -36,6 +36,7 @@
 								<p>{{$pro->Product_id}}</p>
 								<img src="images/product-details/rating.png" alt="" />
 							<form action="{{URL::to('/save_cart')}}" method="POST">
+								{{ csrf_field() }}
 								<span>
 									<span>{{number_format($pro->Product_price).' '.'VNĐ'}}</span>
 									<label>Quantity:</label>

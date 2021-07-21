@@ -65,3 +65,6 @@ Route::post('/save_product','ProductController@save_product');
 Route::post('/update_product/{Product_id}','ProductController@update_product');
 //cart
 Route::post('/save_cart','CartController@save_cart');
+Route::post('/update_cart','CartController@update');
+Route::get('/show_cart','CartController@show_cart');
+Route::get('delete_card/{rowId}','CartController@delete');
