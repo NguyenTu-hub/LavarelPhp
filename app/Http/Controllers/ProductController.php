@@ -134,7 +134,7 @@ class ProductController extends Controller
         ->join('tbl_category_product','tbl_category_product.category_id','=','tbl_product.Catergory_id')
         ->join('tbl_Brand','tbl_Brand.Brand_id','=','tbl_product.Brand_id')
         ->where('tbl_product.Product_id',$product_id)->get(); 
-
+        $Brand_id="";
         foreach($detail_product as $key=>$value)
         {
             $Brand_id=$value->Brand_id;

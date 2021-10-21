@@ -1,12 +1,20 @@
 @extends('welcome')
 @section('content')
-<section id="cart_items">
+
+
+	<section id="cart_items">
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
 				  <li><a href="#">Home</a></li>
-				  <li class="active">Shopping Cart</li>
+				  <li class="active">Payment</li>
 				</ol>
+			</div><!--/breadcrums-->
+			<div class="shopper-informations">
+				<div class="row">
+					
+			<div class="review-payment">
+				<h2>Review & Payment</h2>
 			</div>
 			<div class="table-responsive cart_info">
 				<?php
@@ -67,51 +75,25 @@
 					</tbody>
 				</table>
 			</div>
+			<h4 style="margin: 40px 0;font-size: 20px;">Choose a payment option</h4>
+			<form method="POST" action="{{URL::to('/order_place')}}">
+				{{csrf_field()}}
+				<div class="payment-options">
+					<span>
+						<label><input name="payment_options" value="1" type="checkbox"> Direct Bank Transfer</label>
+					</span>
+					<span>
+						<label><input name="payment_options" value="2" type="checkbox"> Check Payment</label>
+					</span>
+					<span>
+						<label><input name="payment_options" value="3" type="checkbox"> Paypal</label>
+					</span>
+					<input type="submit" value="Send" name="send_order_place" class="btn btn-primary btn-sm">
+				</div>
+
+			</form>
+			
 		</div>
 	</section> <!--/#cart_items-->
-	<section id="do_action">
-		<div class="container">
-			<div class="heading">
-				<h3>What would you like to do next?</h3>
-				<p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
-			</div>
-			<div class="row">
-				
-				<div class="col-sm-6">
-					<div class="total_area">
-						<ul>
-							<li>Cart Sub Total <span>{{Cart::total().' '.'vnd'}}</span></li>
-							<li>Eco Tax <span>{{Cart::tax()}}</span></li>
-							<li>Shipping Cost <span>Free</span></li>
-							<li>Total <span>{{Cart::total().' '.'vnd'}}</span></li>
-						</ul>
-							<!-- <a class="btn btn-default update" href="">Update</a> -->
-							 <?php
-                                    $customer_id=Session::get('customer_id');
-                                    $shipping_id=Session::get('shipping_id');
-                                    if($customer_id!=NULL&&$shipping_id==NULL)
-                                    {
-                                        
-                                    ?>    
-                                     <a class="btn btn-default check_out" href="{{URL::to('/checkout')}}">Check Out</a>
-                                      <?php
-                                  }elseif($customer_id!=NULL&&$shipping_id!=NULL)
-                                  {
-                                  	?>
-                                  		<a class="btn btn-default check_out" href="{{URL::to('/payment')}}">Check Out</a>
-                                  	<?php
 
-                                    }else{
-                                        ?>
-                                        <a class="btn btn-default check_out" href="{{URL::to('/login_checkout')}}">Check Out</a>
-                                        <?php
-
-                                    }
-                                    ?>
-							
-					</div>
-				</div>
-			</div>
-		</div>
-	</section><!--/#do_action-->
 @endsection

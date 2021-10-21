@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 //Client
 Route::get('/','HomeController@index');
 Route::get('/home','HomeController@index');
+Route::post('search_product','HomeController@search');
 //Category_product
 Route::get('/category/{category_id}','CategoryProduct@showCategory_home');
 //Brand_product
@@ -68,3 +69,12 @@ Route::post('/save_cart','CartController@save_cart');
 Route::post('/update_cart','CartController@update');
 Route::get('/show_cart','CartController@show_cart');
 Route::get('delete_card/{rowId}','CartController@delete');
+//checkout
+Route::get('/login_checkout','CheckoutController@login_checkout');
+Route::get('/logout_checkout','CheckoutController@logout_checkout');
+Route::post('/add-customer','CheckoutController@add_customer');
+Route::post('/order_place','CheckoutController@order_place');
+Route::get('/checkout','CheckoutController@checkout'); 
+Route::post('/save_checkout_customer','CheckoutController@save_checkout_customer');
+Route::post('/login_customer','CheckoutController@login_customer');
+Route::get('payment','CheckoutController@payment'); 
