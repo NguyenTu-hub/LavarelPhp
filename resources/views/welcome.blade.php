@@ -13,6 +13,7 @@
     <link href="{{asset('public/frontend/css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('public/frontend/css/main.css')}}" rel="stylesheet">
     <link href="{{asset('public/frontend/css/responsive.css')}}" rel="stylesheet">
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
     <script src="js/respond.min.js"></script>
@@ -445,5 +446,46 @@
     <script src="{{asset('public/frontend/js/price-range.js')}}"></script>
     <script src="{{asset('public/frontend/js/jquery.prettyPhoto.js')}}"></script>
     <script src="{{asset('public/frontend/js/main.js')}}"></script>
+    <script >
+    var usd=document.getElementById("VNDUSD").value
+  paypal.Button.render({
+    // Configure environment
+    env: 'sandbox',
+    client: {
+      sandbox: 'AZaiSwlbeFhxo6qlQpBSSEkMgtHXJnzsR7a1uyvHB3p4CrmKa6dBoBrghxkv02TQJkfoaOpPvez5j5cH',
+      production: 'demo_production_client_id'
+    },
+    // Customize button (optional)
+    locale: 'en_US',
+    style: {
+      size: 'small',
+      color: 'gold',
+      shape: 'pill',
+    },
+
+    // Enable Pay Now checkout flow (optional)
+    commit: true,
+
+    // Set up a payment
+    payment: function(data, actions) {
+      return actions.payment.create({
+        transactions: [{
+          amount: {
+            total: `${usd}`,
+            currency: 'USD'
+          }
+        }]
+      });
+    },
+    // Execute the payment
+    onAuthorize: function(data, actions) {
+      return actions.payment.execute().then(function() {
+        // Show a confirmation message to the buyer
+        window.alert('Thank you for your purchase!');
+      });
+    }
+  }, '#paypal-button');
+
+</script>
 </body>
 </html>

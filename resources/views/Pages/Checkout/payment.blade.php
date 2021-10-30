@@ -86,7 +86,11 @@
 						<label><input name="payment_options" value="2" type="checkbox"> Check Payment</label>
 					</span>
 					<span>
-						<label><input name="payment_options" value="3" type="checkbox"> Paypal</label>
+						@php
+							$vnd=$subtotal/23083;
+						@endphp
+						<input type="hidden" id="VNDUSD" value="{{round($vnd,2)}}">
+						<div id="paypal-button"></div>
 					</span>
 					<input type="submit" value="Send" name="send_order_place" class="btn btn-primary btn-sm">
 				</div>

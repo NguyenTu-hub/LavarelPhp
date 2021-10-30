@@ -78,3 +78,6 @@ Route::get('/checkout','CheckoutController@checkout');
 Route::post('/save_checkout_customer','CheckoutController@save_checkout_customer');
 Route::post('/login_customer','CheckoutController@login_customer');
 Route::get('payment','CheckoutController@payment'); 
+//order
+Route::get('/manage_order','CheckoutController@manage_order'); 
+Route::get('/view-order/{orderID}','CheckoutController@view_order'); 

@@ -12,6 +12,18 @@ use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
+     public function AuthenLogin()
+    {
+        $admin_id=Session::get('admin_id');
+        if($admin_id)
+        {
+            redirect::to('admin.dashboard');
+        }
+        else
+        {
+            redirect::to('login')->send();
+        }
+    }
     public function login_checkout()
     {
          $cate_product=DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
@@ -53,7 +65,7 @@ class CheckoutController extends Controller
     {
          $cate_product=DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
             $brand_product=DB::table('tbl_Brand')->where('Brand_status','0')->orderby('Brand_id','desc')->get();
-            return view('Pages.checkout.payment')->with('category',$cate_product)->with('Brand',$brand_product);;
+            return view('Pages.checkout.payment')->with('category',$cate_product)->with('Brand',$brand_product);
         
     }
     public function logout_checkout()
@@ -105,14 +117,38 @@ class CheckoutController extends Controller
        {
         echo'Thanh toán thẻ ATM';
        }
-       else if($data['payment_method']==1)
+       else if($data['payment_method']==2)
         {
-            echo'tiền mặt';
+            Cart::destroy();
+             $cate_product=DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
+            $brand_product=DB::table('tbl_Brand')->where('Brand_status','0')->orderby('Brand_id','desc')->get();
+            return view('Pages.checkout.hand_cash')->with('category',$cate_product)->with('Brand',$brand_product);
         }
         else
         {
             echo 'Paypal';
         }
        
+    }
+    public function manage_order()
+    {
+         $this->AuthenLogin();
+        $all_order= DB::table('tbl_order')
+        ->join('tbl_customers','tbl_order.customer_id','=','tbl_customers.customer_id')
+        ->select('tbl_order.*','tbl_customers.customer_name')
+        ->orderby('tbl_order.order_id','desc')->get();
+        $manager_order=view('admin.manage_order')->with('all_order',$all_order);
+        return view('admin_layout')->with('admin.manage_order',$manager_order);
+    }
+    public function view_order($orderID){
+        $this->AuthenLogin();
+        $order_by_id= DB::table('tbl_order')
+        ->join('tbl_customers','tbl_order.customer_id','=','tbl_customers.customer_id')
+        ->join('tbl_shipping','tbl_order.shipping_id','=','tbl_shipping.shipping_id')
+        ->join('tbl_order_detail','tbl_order.order_id','=','tbl_order_detail.order_id')
+        ->select('tbl_order.*','tbl_customers.*','tbl_shipping.*','tbl_order_detail.*')->first();
+        $manager_order_by_id=view('admin.view_order')->with('order_by_id',$order_by_id);
+        return view('admin_layout')->with('admin.view_order',$manager_order_by_id);
+        
     }
 }
