@@ -126,7 +126,10 @@ class CheckoutController extends Controller
         }
         else
         {
-            echo 'Paypal';
+            Cart::destroy();
+             $cate_product=DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
+            $brand_product=DB::table('tbl_Brand')->where('Brand_status','0')->orderby('Brand_id','desc')->get();
+            return view('Pages.checkout.hand_cash')->with('category',$cate_product)->with('Brand',$brand_product);
         }
        
     }

@@ -89,10 +89,10 @@
 						@php
 							$vnd=$subtotal/23083;
 						@endphp
-						<input type="hidden" id="VNDUSD" value="{{round($vnd,2)}}">
+						<input type="hidden" name="payment_options" id="VNDUSD" value="{{round($vnd,2)}}">
 						<div id="paypal-button"></div>
 					</span>
-					<input type="submit" value="Send" name="send_order_place" class="btn btn-primary btn-sm">
+					<input type="submit" id="checkout" value="Send" name="send_order_place" class="btn btn-primary btn-sm">
 				</div>
 
 			</form>

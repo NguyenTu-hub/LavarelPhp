@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 //Client
 Route::get('/','HomeController@index');
 Route::get('/home','HomeController@index');
-Route::post('search_product','HomeController@search');
+Route::post('/auto_complete-ajax','HomeController@auto_complete_ajax');
+Route::post('/search_product','HomeController@search');
 //Category_product
 Route::get('/category/{category_id}','CategoryProduct@showCategory_home');
 //Brand_product
@@ -66,9 +67,13 @@ Route::post('/save_product','ProductController@save_product');
 Route::post('/update_product/{Product_id}','ProductController@update_product');
 //cart
 Route::post('/save_cart','CartController@save_cart');
+Route::post('/add-cart-ajax','CartController@add_cart_ajax');
 Route::post('/update_cart','CartController@update');
+Route::post('/update_cart_ajax','CartController@update_cart_ajax');
 Route::get('/show_cart','CartController@show_cart');
+Route::get('/show_cart_ajax','CartController@show_cart_ajax');
 Route::get('delete_card/{rowId}','CartController@delete');
+Route::get('delete_sp/{session_id}','CartController@delete_sp');
 //checkout
 Route::get('/login_checkout','CheckoutController@login_checkout');
 Route::get('/logout_checkout','CheckoutController@logout_checkout');
@@ -81,3 +86,7 @@ Route::get('payment','CheckoutController@payment');
 //order
 Route::get('/manage_order','CheckoutController@manage_order'); 
 Route::get('/view-order/{orderID}','CheckoutController@view_order'); 
+//delivery
+Route::get('delivery','DeliveryController@delivery'); 
+Route::post('/select-delivery','DeliveryController@select_delivery');
+Route::post('/insert-delivery','DeliveryController@insert_delivery');

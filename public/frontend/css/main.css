@@ -16,7 +16,9 @@ body {
 ul li {
   list-style: none;
 }
-
+.productinfo.text-center {
+    height: 380px;
+}
 a:hover {
 outline: none;
 text-decoration:none;

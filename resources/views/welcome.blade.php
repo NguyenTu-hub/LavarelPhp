@@ -111,7 +111,7 @@
                                     }
                                     ?>
                            
-                                <li><a href="{{URL::to('/show_cart')}}"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                <li><a href="{{URL::to('/show_cart_ajax')}}"><i class="fa fa-shopping-cart"></i> Cart</a></li>
                                 <?php
                                     $customer_id=Session::get('customer_id');
                                     if($customer_id!=NULL)
@@ -165,10 +165,11 @@
                         </div>
                     </div>
                     <div class="col-sm-5">
-                        <form action="{{URL::to('/search_product')}}" method="POST">
+                         <form action="{{URL::to('/search_product')}}" autocomplete="off" method="POST">
                             {{csrf_field()}}
-                            <div class="search_box pull-right">
-                            <input type="text" name="keyword_submit" placeholder="Search"/>
+                            <div class="search_box">
+                            <input type="text" style="width: 70%;" name="keyword_submit" id="keyword" placeholder="Search"/>
+                            <div id="search_ajax"></div>
                             <input type="submit" style="margin-top: 0px; color: black;" class="btn btn-primary btn-sm" name="search_item" value="Search">
                         </div>
                         </form>
@@ -439,7 +440,7 @@
     </footer><!--/Footer-->
     
 
-  
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{{asset('public/frontend/js/jquery.js')}}"></script>
     <script src="{{asset('public/frontend/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('public/frontend/js/jquery.scrollUp.min.js')}}"></script>
@@ -480,11 +481,64 @@
     // Execute the payment
     onAuthorize: function(data, actions) {
       return actions.payment.execute().then(function() {
-        // Show a confirmation message to the buyer
+        document.getElementById("checkout").click();
         window.alert('Thank you for your purchase!');
       });
     }
   }, '#paypal-button');
+
+ 
+</script>
+<script type="text/javascript">
+     $('#keyword').keyup(function()
+  {
+    var query=$(this).val();
+    if(query!='')
+    {  
+        var _token=$('input[name="_token"]').val();
+        $.ajax({
+            url:'{{url('/auto_complete-ajax')}}',
+            method:"POST",
+            data:{query:query,_token:_token},
+            success:function(data){
+                $('#search_ajax').fadeIn();
+                 $('#search_ajax').html(data);
+
+
+            }
+
+        });
+    }else{
+        $('#search_ajax').fadeOut();
+    }
+  });
+     $(document).on('click','.li_search_ajax',function(){
+        $('#keyword').val($(this).text());
+        $('#search_ajax').fadeOut();
+     });
+
+    $(document).ready(function(){
+        $('.add-to-cart').click(function(){
+            var id=$(this).data('id');
+            var cart_product_id=$('.cart_product_id_'+id).val();
+            var cart_product_name=$('.cart_product_name_'+id).val();
+            var cart_product_image=$('.cart_product_image_'+id).val();
+            var cart_product_price=$('.cart_product_price_'+id).val();
+            var cart_product_qty=$('.cart_product_qty_'+id).val();
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                    url: '{{url('/add-cart-ajax')}}',
+                    method: 'POST',
+                    data:{cart_product_id:cart_product_id,cart_product_name:cart_product_name,cart_product_image:cart_product_image,cart_product_price:cart_product_price,cart_product_qty:cart_product_qty,_token:_token},
+                    success:function(data){
+                              swal("Product added to cart!", "Thank You!", "success");
+                    }
+
+            });
+
+            
+        })
+    });
 
 </script>
 </body>

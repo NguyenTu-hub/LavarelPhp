@@ -122,6 +122,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-book"></i>
+                        <span>Manage Delivery code</span>
+                    </a>
+                    <ul class="sub">
+						<li><a href="{{URL::to('/delivery')}}">Delivery</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
                         <span>Manage Product</span>
                     </a>
                     <ul class="sub">
@@ -155,6 +164,53 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="{{asset('public/backend/js/scripts.js')}}"></script>
 <script src="{{asset('public/backend/js/jquery.slimscroll.js')}}"></script>
 <script src="{{asset('public/backend/js/jquery.nicescroll.js')}}"></script>
+<script src="{{asset('public/backend/ckeditor/ckeditor.js')}}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.btn_delivery').click(function(){
+			var city=$('.city').val();
+			var province=$('.province').val();
+			var wards=$('.wards').val();
+			var feeship=$('.feeship').val();
+			var _token=$('input[name="_token"]').val();
+			$.ajax({
+				url:'{{url('/insert-delivery')}}',
+				method:'POST',
+				data:{city:city,province:province,wards:wards,feeship:feeship,_token:_token},
+				success:function(data){
+					alert('Insert Successfully');
+				}
+			})
+		})
+		$('.choose').on('change',function(){
+			var action=$(this).attr('id');
+			var matp=$(this).val();
+			var _token=$('input[name="_token"]').val();
+			var result='';
+			// alert(action);
+			// alert(matp);
+			// alert(_token);
+			if(action=='city'){
+				result='province';
+			}else{
+				result='wards';
+			}
+			$.ajax({
+				url:'{{url('/select-delivery')}}',
+				method:'POST',
+				data:{action:action,matp:matp,_token:_token},
+				success:function(data){
+					$('#'+result).html(data);
+				}
+			})
+		});
+	})
+
+</script>
+<script type="text/javascript">
+	CKEDITOR.replace('ckeditor');
+	CKEDITOR.replace('ckeditor1')
+</script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
 <script src="{{asset('public/backend/js/jquery.scrollTo.js')}}"></script>
 <!-- morris JavaScript -->	

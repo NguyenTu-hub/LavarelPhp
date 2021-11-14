@@ -31,11 +31,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Description</label>
-                                    <textarea style="resize: none" rows="5" class="form-control" name="Description" id="exampleInputPassword1" placeholder="Description"></textarea>
+                                    <textarea style="resize: none" rows="5" class="form-control" name="Description" id="ckeditor1" placeholder="Description"></textarea>
                                 </div>
                                  <div class="form-group">
                                     <label for="exampleInputPassword1">Content</label>
-                                    <textarea style="resize: none" rows="5" class="form-control" name="content" id="exampleInputPassword1" placeholder="Description content"></textarea>
+                                    <textarea style="resize: none" rows="5" class="form-control" name="content" id="ckeditor" placeholder="Description content"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputFile">Brand Product</label>
