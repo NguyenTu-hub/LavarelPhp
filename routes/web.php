@@ -83,6 +83,10 @@ Route::get('/checkout','CheckoutController@checkout');
 Route::post('/save_checkout_customer','CheckoutController@save_checkout_customer');
 Route::post('/login_customer','CheckoutController@login_customer');
 Route::get('payment','CheckoutController@payment'); 
+Route::post('/select_delivery_home','CheckoutController@select_delivery_home');
+Route::post('/caculate_fee','CheckoutController@caculate_fee');
+Route::post('/show_order','CheckoutController@show_order');
+Route::post('/confirm_order','CheckoutController@confirm_order');
 //order
 Route::get('/manage_order','CheckoutController@manage_order'); 
 Route::get('/view-order/{orderID}','CheckoutController@view_order'); 
@@ -90,3 +94,5 @@ Route::get('/view-order/{orderID}','CheckoutController@view_order');
 Route::get('delivery','DeliveryController@delivery'); 
 Route::post('/select-delivery','DeliveryController@select_delivery');
 Route::post('/insert-delivery','DeliveryController@insert_delivery');
+Route::post('/select_feeship','DeliveryController@select_feeship');
+Route::post('/update-delivery','DeliveryController@update_delivery');

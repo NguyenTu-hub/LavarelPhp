@@ -7,20 +7,83 @@
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
 				  <li><a href="#">Home</a></li>
-				  <li class="active">Payment</li>
+				  <li class="active">Check out</li>
 				</ol>
 			</div><!--/breadcrums-->
+			<div class="register-req">
+				<p>Please use Register And Checkout to easily get access to your order history, or use Checkout as Guest</p>
+			</div><!--/register-req-->
+
 			<div class="shopper-informations">
 				<div class="row">
 					
-			<div class="review-payment">
-				<h2>Review & Payment</h2>
+					<div class="col-sm-12 clearfix">
+						<div class="bill-to">
+							<p>Bill To</p>
+							<div class="form-one">
+								<form action="{{URL::to('/save_checkout_customer')}}" method="POST">
+									{{csrf_field()}}
+									<input type="text" name="shipping_email" class="shipping_email" placeholder="Email*">
+									<input type="text" name="shipping_name" class="shipping_name" placeholder="Name *">
+									<input type="text" name="shipping_address" class="shipping_address" placeholder="Address *">
+									<input type="text" name="shipping_phone" class="shipping_phone" placeholder="Phone">
+									<textarea name="shipping_note" class="shipping_note" placeholder="Notes about your order" 
+									rows="5"></textarea>
+									@if(Session::get('fee'))
+									<input type="hidden" name="order_fee" class="order_fee" value="{{Session::get('fee')}}">
+									@endif
+										<div class="form-group">
+                                    		<label for="exampleInputFile">Choose a payment method</label>
+                                  			 <select name="payment_select" id="shipping_method" class="form-control input-sm m-bot15 payment_select">
+                                        <option value="0">Paypal</option>
+                                        <option value="1">Payment on delivery</option>
+                                    </select>
+                                </div>
+									<input type="button" value="Send" name="btn_send_order" class="btn btn-primary btn-sm btn_send">
+								</form>
+								  <form>
+                                    {{csrf_field()}}
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Choose a City</label>
+                                   <select name="City" id="city" class="form-control input-sm m-bot15 choose city">
+                                        <option value="">Choose a city</option>
+                                        @foreach($city as $key=>$ci)
+                                        <option value="{{$ci->matp}}">{{$ci->name_city}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Choose a Province</label>
+                                   <select name="Province" id="province" class="form-control input-sm m-bot15 province choose">
+                                        <option value="">Choose a Province</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Choose a Ward</label>
+                                   <select name="Ward" id="wards" class="form-control input-sm m-bot15 wards">
+                                         <option value="">Choose a Ward</option>
+                                    </select>
+                                </div>
+                                
+                                <input type="button" value="Feeship" name="btn_send_feeship" class="btn btn-primary btn-sm caculate_delivery">
+                            </form>
+                           	
+
+							</div>
+							
+						</div>
+					</div>
+									
+				</div>
 			</div>
-			<div class="table-responsive cart_info">
-				<?php
-					$content= Cart::content();
-					
-				?>
+				@if(session()->has('message'))
+				<div class="alert alert-success">
+					{{session()->get('message')}}
+				</div>
+				@endif
+			<div class="table-responsive cart_info"> 
+				<form action="{{url('/update_cart_ajax')}}" method="POST">
+					{{ csrf_field() }}
 				<table class="table table-condensed">
 					<thead>
 						<tr class="cart_menu">
@@ -33,70 +96,75 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach($content as $value)
+					<!-- 	@php
+						echo '<pre>';
+						print_r(Session::get('cart'));
+					echo '</pre>';
+						@endphp -->
+						@php
+						$total=0;
+						@endphp
+					@foreach(Session::get('cart') as $key)
+						@php
+							$subtotal=$key['product_price']*$key['product_qty'];
+							$total+=$subtotal
+						@endphp
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="{{URL::to('public/upload/products/'.$value->options->image)}}" width="30" alt=""></a>
+								<a href=""><img src="{{asset('public/upload/products/'.$key['product_image'])}}" width="30" alt=""></a>
 							</td>
 							<td class="cart_description">
-								<h4><a href="">{{$value->name}}</a></h4>
-								<p>Web ID: 1089772</p>
+								<h4><a href=""></a></h4>
+								<p>{{$key['product_name']}}</p>
 							</td>
 							<td class="cart_price">
-								<p>{{number_format($value->price)}}</p>
+								<p>{{$key['product_price']}}</p>
 							</td>
-							<td class="cart_quantity">
-								<form action="{{URL::to('/update_cart')}}" method="POST">
+							<td class="cart_quantity"> 
+								<form action="" method="POST">
 									{{ csrf_field() }}
 								<div class="cart_quantity_button">
-									<input class="cart_quantity_input" type="text" name="cart_quantity" value="{{$value->qty}}" autocomplete="off" size="2">
-									<input type="hidden" name="rowId" value="{{$value->rowId}}">
-									<input type="submit" value="Update" name="btn_update" class="btn btn-default btn-sm">
+									<input class="cart_quantity_update" type="number" min="1" name="cart_quantity[{{$key['session_id']}}]" data-session_id="{{$key['session_id']}}"  value="{{$key['product_qty']}}">
+									
 								</div>
 								</form>
 							</td>
 							<td class="cart_total">
 								<p class="cart_total_price">
-									<?php
-									$subtotal= $value->price* $value->qty;
-									echo number_format($subtotal).' '.'vnd'
-
-								?>
-									
+									{{$subtotal}}
 								</p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href="{{URL::to('/delete_card/'.$value->rowId)}}"><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="{{url('/delete_sp/'.$key['session_id'])}}"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
-
-						</tr>
 						@endforeach
-					</tbody>
-				</table>
-			</div>
-			<h4 style="margin: 40px 0;font-size: 20px;">Choose a payment option</h4>
-			<form method="POST" action="{{URL::to('/order_place')}}">
-				{{csrf_field()}}
-				<div class="payment-options">
-					<span>
-						<label><input name="payment_options" value="1" type="checkbox"> Direct Bank Transfer</label>
-					</span>
-					<span>
-						<label><input name="payment_options" value="2" type="checkbox"> Check Payment</label>
-					</span>
-					<span>
-						@php
-							$vnd=$subtotal/23083;
-						@endphp
-						<input type="hidden" name="payment_options" id="VNDUSD" value="{{round($vnd,2)}}">
-						<div id="paypal-button"></div>
-					</span>
-					<input type="submit" id="checkout" value="Send" name="send_order_place" class="btn btn-primary btn-sm">
-				</div>
+						<td><li>Price <span>{{$total.' '.'vnd'}}</span></li>
+						@if(Session::get('fee'))
+						<li>Fee ship <span>{{number_format(Session::get('fee'),0,',','.')}}</span></li>
+						@endif
+						<li><span>Total Cart</span>
+							@php
+								if(Session::get('fee'))
+								{
+									echo number_format(Session::get('fee')+$total,0,',','.');
+								}
+								else
+								{
+									echo $total;
+								}
+							@endphp
+						</li></td>
 
+					</td>
+						<tr><td><input type="submit" value="Update" name="btn_update" class="btn btn-default btn-sm check_out"></td></tr>
+					</tbody>
+					
+				</table>
 			</form>
+			</div>
 			
+				
 		</div>
 	</section> <!--/#cart_items-->
 

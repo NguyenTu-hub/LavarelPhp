@@ -167,6 +167,32 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="{{asset('public/backend/ckeditor/ckeditor.js')}}"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		fetch_delivery();
+		function fetch_delivery()
+		{
+			var _token=$('input[name="_token"]').val();
+			$.ajax({
+				url:'{{url('/select_feeship')}}',
+				method:'POST',
+				data:{_token:_token},
+				success:function(data){
+					$('#load_delivery').html(data);
+				}
+			})
+		}
+		$(document).on('blur','.feeship_edit',function(){
+			var feeship_id=$(this).data('feeship_id');
+			var value=$(this).text();
+			var _token=$('input[name="_token"]').val();
+			$.ajax({
+				url:'{{url('/update-delivery')}}',
+				method:'POST',
+				data:{feeship_id:feeship_id,value:value,_token:_token},
+				success:function(data){
+					fetch_delivery();
+				}
+			})
+		})
 		$('.btn_delivery').click(function(){
 			var city=$('.city').val();
 			var province=$('.province').val();
@@ -179,6 +205,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				data:{city:city,province:province,wards:wards,feeship:feeship,_token:_token},
 				success:function(data){
 					alert('Insert Successfully');
+					fetch_delivery();
 				}
 			})
 		})

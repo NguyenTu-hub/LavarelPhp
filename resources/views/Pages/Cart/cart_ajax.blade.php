@@ -70,8 +70,11 @@
 								<a class="cart_quantity_delete" href="{{url('/delete_sp/'.$key['session_id'])}}"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
+
 						@endforeach
-						<tr><td><input type="submit" value="Update" name="btn_update" class="btn btn-default btn-sm check_out"></td></tr>
+						<td><li>Cart Total <span>{{$total.' '.'vnd'}}</span></li></td>
+						<tr>
+							<td><input type="submit" value="Update" name="btn_update" class="btn btn-default btn-sm check_out"></td></tr>
 					</tbody>
 					
 				</table>
@@ -83,7 +86,6 @@
 		<div class="container">
 			<div class="heading">
 				<h3>What would you like to do next?</h3>
-				<p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
 			</div>
 			<div class="row">
 				
@@ -91,9 +93,6 @@
 					<div class="total_area">
 						<ul>
 							<li>Cart Sub Total <span>{{$total.' '.'vnd'}}</span></li>
-							<li>Eco Tax <span>{{Cart::tax()}}</span></li>
-							<li>Shipping Cost <span>Free</span></li>
-							<li>Total <span>{{Cart::total().' '.'vnd'}}</span></li>
 						</ul>
 							<!-- <a class="btn btn-default update" href="">Update</a> -->
 							 <?php

@@ -40,12 +40,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Fee Ship</label>
-                                    <input type="text" name="fee_ship" class="form-control feeship" id="exampleInputEmail1" placeholder="Enter category product">
+                                    <input type="text" name="fee_ship" class="form-control feeship" id="exampleInputEmail1" placeholder="Enter FeeShip">
                                 </div>
                                 <button type="button" name="btn_delivery" class="btn btn-info btn_delivery">Add fee ship</button>
                             </form>
                             </div>
-
+                                <div id="load_delivery">
+                                    
+                                </div>
                         </div>
                     </section>
 

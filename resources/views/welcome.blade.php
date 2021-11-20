@@ -448,7 +448,7 @@
     <script src="{{asset('public/frontend/js/jquery.prettyPhoto.js')}}"></script>
     <script src="{{asset('public/frontend/js/main.js')}}"></script>
     <script >
-    var usd=document.getElementById("VNDUSD").value
+    var usd=document.getElementById("VNDUSD").value;
   paypal.Button.render({
     // Configure environment
     env: 'sandbox',
@@ -481,8 +481,30 @@
     // Execute the payment
     onAuthorize: function(data, actions) {
       return actions.payment.execute().then(function() {
-        document.getElementById("checkout").click();
-        window.alert('Thank you for your purchase!');
+         var shipping_email=$('.shipping_email').val();
+            var shipping_name=$('.shipping_name').val();
+            var shipping_address=$('.shipping_address').val();
+            var shipping_phone=$('.shipping_phone').val();
+            var shipping_note=$('.shipping_note').val();
+            var shipping_method=$('.payment_select').val();
+            var order_fee=$('.order_fee').val();
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                    url: '{{url('/confirm_order')}}',
+                    method: 'POST',
+                    data:{shipping_email:shipping_email,shipping_name:shipping_name,shipping_address:shipping_address,shipping_phone:shipping_phone,shipping_note:shipping_note,shipping_method:shipping_method,order_fee:order_fee,_token:_token},
+                    success:function(){
+                              swal("Thanks your purchase", {
+                        icon: "success",
+                     });
+                                setTimeout(function(){
+
+                            window.location.href="/watchshoplaravel/";
+                        }, 500);
+                    }
+
+            });
+        // window.alert('Thank you for your purchase!');
       });
     }
   }, '#paypal-button');
@@ -518,6 +540,28 @@
      });
 
     $(document).ready(function(){
+        $('.choose').on('change',function(){
+            var action=$(this).attr('id');
+            var matp=$(this).val();
+            var _token=$('input[name="_token"]').val();
+            var result='';
+            // alert(action);
+            // alert(matp);
+            // alert(_token);
+            if(action=='city'){
+                result='province';
+            }else{
+                result='wards';
+            }
+            $.ajax({
+                url:'{{url('/select_delivery_home')}}',
+                method:'POST',
+                data:{action:action,matp:matp,_token:_token},
+                success:function(data){
+                    $('#'+result).html(data);
+                }
+            })
+        });
         $('.add-to-cart').click(function(){
             var id=$(this).data('id');
             var cart_product_id=$('.cart_product_id_'+id).val();
@@ -540,6 +584,118 @@
         })
     });
 
+</script>
+<script type="text/javascript">
+    $(document).ready(function()
+    {
+        $('.caculate_delivery').click(function()
+        {
+            var matp=$('.city').val();
+            var maqh=$('.province').val();
+            var xaid=$('.wards').val();
+            var _token = $('input[name="_token"]').val();
+            if(matp=='' || maqh==''||xaid=='')
+            {
+                swal("Please choose three options to delivery");
+            }
+            else{
+            $.ajax({
+                url:'{{url('/caculate_fee')}}',
+                method:'POST',
+                data:{maqh:maqh,matp:matp,xaid:xaid,_token:_token},
+                success:function(){
+                    location.reload()
+                }
+            })
+        }
+        });
+    });
+</script>
+<script type="text/javascript">
+     $('.btn_send').click(function(){
+          
+            var shipping_email=$('.shipping_email').val();
+            var shipping_name=$('.shipping_name').val();
+            var shipping_address=$('.shipping_address').val();
+            var shipping_phone=$('.shipping_phone').val();
+            var shipping_note=$('.shipping_note').val();
+            var shipping_method=$('.payment_select').val();
+            var order_fee=$('.order_fee').val();
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                    url: '{{url('/show_order')}}',
+                    method: 'POST',
+                    data:{shipping_email:shipping_email,shipping_name:shipping_name,shipping_address:shipping_address,shipping_phone:shipping_phone,shipping_note:shipping_note,shipping_method:shipping_method,order_fee:order_fee,_token:_token},
+                    success:function(data){
+                               $('.modal-body').html(data);
+                                $('#Quick_payment').modal();
+
+                            
+                    }
+
+            });
+            
+        })
+</script>
+<script type="text/javascript">
+    $('.send_data').click(function()
+    {
+     swal({
+  title: "Are you sure?",
+  text: "Once you place an order you cannot refund the transaction",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+
+            var shipping_email=$('.shipping_email').val();
+            var shipping_name=$('.shipping_name').val();
+            var shipping_address=$('.shipping_address1').val();
+            var shipping_phone=$('.shipping_phone').val();
+            var shipping_note=$('.shipping_note').val();
+            var shipping_method=$('.payment_select').val();
+            var order_fee=$('.order_fee').val();
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                    url: '{{url('/confirm_order')}}',
+                    method: 'POST',
+                    data:{shipping_email:shipping_email,shipping_name:shipping_name,shipping_address:shipping_address,shipping_phone:shipping_phone,shipping_note:shipping_note,shipping_method:shipping_method,order_fee:order_fee,_token:_token},
+                    success:function(){
+                        swal("Thanks your purchase", {
+                        icon: "success",
+                     });
+                         
+                        setTimeout(function(){
+
+                            window.location.href="/watchshoplaravel/";
+                        }, 500);  
+                    }
+
+            });
+  } else {
+    swal("Please comlete your order!");
+  }
+});   
+    })
+</script>
+<script type="text/javascript">
+    $(document).ready(function()
+    {
+        $('.payment_select').on('change',function()
+        {
+            var value=$(this).val();
+            if(value==1)
+            {
+                $('.paypal-button').css('display','none');
+            }
+            else
+            {
+                $('.paypal-button').show();
+            }
+        })
+    })
 </script>
 </body>
 </html>

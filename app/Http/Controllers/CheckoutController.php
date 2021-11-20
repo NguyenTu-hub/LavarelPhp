@@ -5,7 +5,13 @@ use DB;
 use App\Http\Requests;
 use Session;
 use Cart;
-
+use App\Models\City;
+use App\Models\Province;
+use App\Models\Wards;
+use App\Models\Freeship;
+use App\Models\order;
+use App\Models\orderDetail;
+use App\Models\shipping;
 use Illuminate\Support\Facades\Redirect;
 session_start();
 use Illuminate\Http\Request;
@@ -23,6 +29,186 @@ class CheckoutController extends Controller
         {
             redirect::to('login')->send();
         }
+    }
+    public function show_order(Request $request)
+    {
+        $method='';
+        $data=$request->all();
+        if(Session::get('Info'))
+        {
+             $request->session()->forget('Info');
+        }
+       
+        if($data['shipping_method']==0)
+            {
+                $method='PayPal';
+            }
+            else
+            {
+                $method='Payment';
+            }
+            $InfoShipping[]=array(
+                'shipping_name'=>$data['shipping_name'],
+                'shipping_email'=>$data['shipping_email'],
+                'shipping_phone'=>$data['shipping_phone'],
+                 'shipping_address'=>$data['shipping_address'],
+                'shipping_note'=>$data['shipping_note'],
+                'shipping_method'=>$method,
+                 'order_fee'=>$data['order_fee'],
+            );
+            Session::put('Info',$InfoShipping);
+            Session::save();
+
+            $output='        
+                            <form>
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                            <div class="form-group">';
+                            foreach(Session::get('Info') as $key)
+                            {
+                            $output.='
+                            <input type="text" class="form-control shipping_email1" id="message-text" value="'.$key['shipping_email'].'" disabled>
+                            </div>
+                            <div class="form-group">
+                            <input type="text" class="form-control shipping_name1" id="message-text" value="'.$key['shipping_name'].'" disabled>
+                            </div>
+                            <div class="form-group">';
+                            foreach(Session::get('address') as $add)
+                            {
+                                $output.='<input type="text" class="form-control shipping_address1" id="message-text" value="'.$key['shipping_address'].",".$add['xaphuong'].",".$add['quanhuyen'].",".$add['thanhpho'].'"disabled> ';
+                            }
+                            $output.='
+                            </div>
+                            <div class="form-group">
+                            <input type="text" class="form-control payment_select1" id="message-text" value="'.$method.'" disabled>
+                            </div> 
+
+                            <div class="form-group">
+                            <input type="text" class="form-control shipping_phone1" id="message-text" value="'.$key['shipping_phone'].'" disabled>
+                            </div> 
+                            ';
+                               }
+                               $total=0;
+                               $output.='<p>Orders placed</p>';
+                               foreach(Session::get('cart') as $cart)
+                               {
+                                $subtotal=$cart['product_price']*$cart['product_qty'];
+                                $total+=$subtotal;
+                                 $output.=' 
+                            
+                            <div class="form-group">
+                            <label for="message-text" class="col-form-label">'.$cart['product_name'].": x ".$cart['product_qty'].'</label>
+                            </div> ';}
+                            $total=$total+Session::get('fee');
+                             $output.='
+                             <div class="form-group">
+                            <label for="message-text" class="col-form-label">FeeShip:'.Session::get('fee').'</label>
+                            </div>
+                             <div class="form-group">
+                            <label for="message-text" class="col-form-label">Total Price:'.$total.'</label>
+                            </div>
+                            </form>';
+             echo $output;
+        
+    }
+    public function confirm_order(Request $request)
+    {
+         $data=$request->all();
+         $shipping=new shipping();
+         $shipping->shipping_name=$data['shipping_name'];
+         $shipping->shipping_email=$data['shipping_email'];
+         $shipping->shipping_phone=$data['shipping_phone'];
+         $shipping->shipping_address=$data['shipping_address'];
+         $shipping->shipping_note=$data['shipping_note'];
+         $shipping->shipping_method=$data['shipping_method'];
+         $shipping->save();
+         $shipping_id=$shipping->shipping_id;
+         
+         
+         
+         $checkout_code=substr(md5(microtime()), rand(0,26),5);
+         $order=new order();
+         $order->customer_id=Session::get('customer_id');
+         $order->shipping_id=$shipping_id;
+         $order->order_status=1;
+         $order->order_code=$checkout_code;
+         date_default_timezone_set('Asia/Ho_Chi_Minh');
+         $order->created_at=now();
+         $order->save();
+
+        
+         if(Session::get('cart'))
+         {
+            foreach(Session::get('cart') as $key=>$cart)
+            {
+                 $order_detail=new orderDetail();
+                $order_detail->order_code=$checkout_code;
+                $order_detail->product_id=$cart['product_id'];
+                $order_detail->product_price=$cart['product_price'];
+                $order_detail->product_name=$cart['product_name'];
+                $order_detail->Product_sale_quantity=$cart['product_qty'];
+                $order_detail->product_fee=$data['order_fee'];
+                $order_detail->save();
+                
+            }
+         }
+         $request->session()->forget('cart');
+
+    }
+    public function caculate_fee(Request $request)
+    {
+       $data=$request->all();
+      
+       if($data['matp'])
+       {
+        $feeship=Freeship::where('fee_matp',$data['matp'])->where('fee_maqh',$data['maqh'])->where('fee_xaid',$data['xaid'])->get();
+        
+        $count=$feeship->count();
+        if($count>0)
+        {
+            foreach($feeship as $key=>$fee)
+             {
+                 $address[]=array(
+                'xaphuong'=>$fee->wards->name_xaphuong,
+                'quanhuyen'=>$fee->Province->name_quanhuyen,
+                'thanhpho'=>$fee->City->name_city,
+                                );
+                 $request->session()->forget('address');
+                 Session::put('address',$address);
+                 Session::save();
+                Session::put('fee',$fee->fee_feeship);
+                Session::save();
+             }
+        }else
+        {
+            Session::put('fee',20000);
+            Session::save();
+        }
+
+        
+       } 
+    }
+    public function select_delivery_home(Request $request)
+    {
+         $data=$request->all();
+        if($data['action'])
+        {
+             $output="";
+            if($data['action']=="city"){
+                $select_province=Province::where('matp',$data['matp'])->orderby('maqh','ASC')->get();
+                $output.='<option>---Choose a province---</option>';
+                foreach($select_province as $key=>$province){
+                $output.='<option value="'.$province->maqh.'">'.$province->name_quanhuyen.'</option>';
+                }
+            }
+            else {
+                   $select_wards=Wards::where('maqh',$data['matp'])->orderby('xaid','ASC')->get();
+                   $output.='<option>---Choose a Ward---</option>';
+                foreach($select_wards as $key=>$ward){
+                $output.='<option value="'.$ward->xaid.'">'.$ward->name_xaphuong.'</option>';
+                }
+               }   
+        }
+        echo $output;
     }
     public function login_checkout()
     {
@@ -47,7 +233,8 @@ class CheckoutController extends Controller
     {
          $cate_product=DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
             $brand_product=DB::table('tbl_Brand')->where('Brand_status','0')->orderby('Brand_id','desc')->get();
-        return view('Pages.Checkout.checkout')->with('category',$cate_product)->with('Brand',$brand_product);
+              $city=City::orderby('matp','ASC')->get();
+        return view('Pages.Checkout.checkout')->with('category',$cate_product)->with('Brand',$brand_product)->with('city',$city);
     }
     public function save_checkout_customer(Request $request)
     {
