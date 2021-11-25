@@ -17,15 +17,15 @@
         <thead>
           <tr>
             <th>Customer Name</th>
-            <th>Address</th>
+            <th>Phone</th>
             <th style="width:30px;"></th>
           </tr>
         </thead>
         <tbody>
          
           <tr>
-            <td>{{$order_by_id->customer_name}}</td>
-             <td>{{$order_by_id->customer_phone}}</td>
+            <td>{{$customer->customer_name}}</td>
+             <td>{{$customer->customer_phone}}</td>
           </tr>
          
         </tbody>
@@ -50,18 +50,21 @@
       <table class="table table-striped b-t b-light">
         <thead>
           <tr>
+            
             <th>Shipping Name</th>
             <th>Address</th>
-            <th>Phone</th>
+            <th>Notes</th>
+            <th>Payment method</th>
             <th style="width:30px;"></th>
           </tr>
         </thead>
         <tbody>
          
           <tr>
-            <td>{{$order_by_id->shipping_name}}</td>
-             <td>{{$order_by_id->shipping_address}}</td>
-             <td>{{$order_by_id->shipping_phone}}</td>
+            <td>{{$shipping->shipping_name}}</td>
+             <td>{{$shipping->shipping_address}}</td>
+             <td>{{$shipping->shipping_note}}</td>
+             <td>@if($shipping->shipping_method==0)Paypal @else Cash Payment @endif</td>
           </tr>
          
         </tbody>
@@ -87,43 +90,43 @@
       <table class="table table-striped b-t b-light">
         <thead>
           <tr>
+            <th>ordinal</th>
             <th>Product Name</th>
             <th>Quantity</th>
             <th>Price</th>
+            <th>FeeShip</th>
             <th>Total Price</th>
             <th style="width:30px;"></th>
           </tr>
         </thead>
         <tbody>
+          @php
+            $i=0;
+            $total=0;
+          @endphp
+          @foreach($order_detail as $key=>$detail)
+          @php
+          $i++;
+          $subtotal=$detail->Product_price*$detail->Product_sale_quantity;
+          $total+=$subtotal;
+          @endphp
           <tr>
-           
-            <td>{{$order_by_id->Product_name}}</td>
-             <td>{{$order_by_id->Product_sale_quantity}}</td>
-              <td>{{$order_by_id->Product_price}}</td>
-              <td>{{$order_by_id->order_total}}</td>
+            <td>{{$i}}</td>
+            <td>{{$detail->Product_name}}</td>
+             <td>{{$detail->Product_sale_quantity}}</td>
+              <td>{{$detail->Product_price.' '.'vnd'}}</td>
+              <td>{{$detail->product_fee.' '.'vnd'}}</td>
+              <td>{{$detail->Product_price*$detail->Product_sale_quantity.' '.'vnd'}}</td>
 
+          </tr>
+          @endforeach
+          <tr>
+            <td>Pay:{{$total+$detail->product_fee.' '.'vnd'}}</td>
           </tr>
         </tbody>
       </table>
+      <a class="btn btn-info" target="_blank" href="{{url('/print_order/'.$detail->order_code)}}">Print order </a>
     </div>
-    <footer class="panel-footer">
-      <div class="row">
-        
-        <div class="col-sm-5 text-center">
-          <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
-        </div>
-        <div class="col-sm-7 text-right text-center-xs">                
-          <ul class="pagination pagination-sm m-t-none m-b-none">
-            <li><a href=""><i class="fa fa-chevron-left"></i></a></li>
-            <li><a href="">1</a></li>
-            <li><a href="">2</a></li>
-            <li><a href="">3</a></li>
-            <li><a href="">4</a></li>
-            <li><a href=""><i class="fa fa-chevron-right"></i></a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
   </div>
 </div>
  @endsection

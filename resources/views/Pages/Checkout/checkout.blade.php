@@ -61,7 +61,7 @@
 									<textarea name="shipping_note" class="shipping_note" placeholder="Notes about your order" 
 									rows="5"></textarea>
 									@if(Session::get('fee'))
-									<input type="hidden" name="order_fee" class="order_fee" value="{{Session::get('fee')}}">
+									
 									@endif
 										<div class="form-group">
                                     		<label for="exampleInputFile">Choose a payment method</label>
@@ -71,7 +71,7 @@
                                     </select>
                                 </div>
                                 <div class="paypal-button" id="paypal-button"></div>
-									<input type="button" value="Send" name="btn_send_order" class="btn btn-primary btn-sm btn_send">
+									<input type="button" style="display: none;" value="Send" name="btn_send_order" class="btn btn-primary btn-sm btn_send">
 								</form>
 								  <form>
                                     {{csrf_field()}}
@@ -172,21 +172,8 @@
 						</tr>
 						@endforeach
 						<td><li>Price <span>{{$total.' '.'vnd'}}</span></li>
-						@if(Session::get('fee'))
-						<li>Fee ship <span>{{number_format(Session::get('fee'),0,',','.')}}</span></li>
-						@endif
-						<li><span>Total Cart</span>
-							@php
-								if(Session::get('fee'))
-								{
-									echo number_format(Session::get('fee')+$total,0,',','.');
-									$total=$total+Session::get('fee');
-								}
-								else
-								{
-									echo $total;
-								}
-							@endphp
+						<div id="tienship"></div>
+						<!-- <li>Fee ship <span>{{number_format(Session::get('fee'),0,',','.')}}</span></li> -->
 						</li></td>
 					</td>
 					<input type="hidden" id="VNDUSD" name="VND" value="{{round($total/23000,2)}}">

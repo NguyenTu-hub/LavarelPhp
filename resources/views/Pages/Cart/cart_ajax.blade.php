@@ -36,6 +36,7 @@
 						@php
 						$total=0;
 						@endphp
+						@if(Session::get('cart'))
 					@foreach(Session::get('cart') as $key)
 						@php
 							$subtotal=$key['product_price']*$key['product_qty'];
@@ -72,6 +73,7 @@
 						</tr>
 
 						@endforeach
+						@endif
 						<td><li>Cart Total <span>{{$total.' '.'vnd'}}</span></li></td>
 						<tr>
 							<td><input type="submit" value="Update" name="btn_update" class="btn btn-default btn-sm check_out"></td></tr>

@@ -88,11 +88,15 @@ Route::post('/caculate_fee','CheckoutController@caculate_fee');
 Route::post('/show_order','CheckoutController@show_order');
 Route::post('/confirm_order','CheckoutController@confirm_order');
 //order
-Route::get('/manage_order','CheckoutController@manage_order'); 
-Route::get('/view-order/{orderID}','CheckoutController@view_order'); 
+Route::get('/manage_order','OrderController@manage_order'); 
+Route::get('/print_order/{checkout_code}','OrderController@print_order'); 
+Route::get('/view_order/{order_code}','OrderController@view_order'); 
 //delivery
 Route::get('delivery','DeliveryController@delivery'); 
 Route::post('/select-delivery','DeliveryController@select_delivery');
 Route::post('/insert-delivery','DeliveryController@insert_delivery');
 Route::post('/select_feeship','DeliveryController@select_feeship');
 Route::post('/update-delivery','DeliveryController@update_delivery');
+//Statitical
+Route::get('/Statitical','StatiticalController@index'); 
+Route::post('/filter-statitical','StatiticalController@statitical');

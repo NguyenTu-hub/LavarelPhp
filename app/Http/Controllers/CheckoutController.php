@@ -183,9 +183,19 @@ class CheckoutController extends Controller
             Session::put('fee',20000);
             Session::save();
         }
+        $total=0;
+        foreach(Session::get('cart') as $key){
+            $total+=$key['product_price']*$key['product_qty'];
+        }
 
-        
-       } 
+            $output='<li>Fee ship: <span>'.number_format(Session::get('fee'),0,',','.').'</span></li> 
+                <li><span>Total Cart:'.number_format(Session::get('fee')+$total,0,',','.').'</span>
+                <input type="hidden" name="order_fee" class="order_fee" value="'.Session::get('fee').'">
+             ';
+           
+       }
+        echo $output;
+      
     }
     public function select_delivery_home(Request $request)
     {

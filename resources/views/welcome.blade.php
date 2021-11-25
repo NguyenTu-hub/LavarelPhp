@@ -194,9 +194,9 @@
                         <div class="carousel-inner">
                             <div class="item active">
                                 <div class="col-sm-6">
-                                    <h1><span>E</span>-WATCHER</h1>
-                                    <h2>Free ship</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                                    <h1><span>EL</span>-WATCHER</h1>
+                                    <h2>Choose for you the most stylish watch</h2>
+                                    <p>Shop selling quality and reputable watches. </p>
                                     <button type="button" class="btn btn-default get">Get it now</button>
                                 </div>
                                 <div class="col-sm-6">
@@ -205,9 +205,9 @@
                             </div>
                             <div class="item">
                                 <div class="col-sm-6">
-                                     <h1><span>E</span>-WATCHER</h1>
-                                    <h2>Free ship</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                                     <h1><span>EL</span>-WATCHER</h1>
+                                    <h2>Choose for you the most stylish watch</h2>
+                                    <p>Shop selling quality and reputable watches. </p>
                                     <button type="button" class="btn btn-default get">Get it now</button>
                                 </div>
                                 <div class="col-sm-6">
@@ -218,9 +218,9 @@
                             
                             <div class="item">
                                 <div class="col-sm-6">
-                                    <h1><span>E</span>-WATCHER</h1>
-                                    <h2>Free ship</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                                     <h1><span>EL</span>-WATCHER</h1>
+                                    <h2>Choose for you the most stylish watch</h2>
+                                    <p>Shop selling quality and reputable watches. </p>
                                     <button type="button" class="btn btn-default get">Get it now</button>
                                 </div>
                                 <div class="col-sm-6">
@@ -603,8 +603,8 @@
                 url:'{{url('/caculate_fee')}}',
                 method:'POST',
                 data:{maqh:maqh,matp:matp,xaid:xaid,_token:_token},
-                success:function(){
-                    location.reload()
+                success:function(data){
+                    $('#tienship').html(data)
                 }
             })
         }
@@ -689,10 +689,12 @@
             if(value==1)
             {
                 $('.paypal-button').css('display','none');
+                $('.btn_send').show();
             }
             else
             {
                 $('.paypal-button').show();
+                $('.btn_send').css('display','none');
             }
         })
     })
