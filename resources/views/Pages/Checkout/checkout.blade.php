@@ -176,7 +176,7 @@
 						<!-- <li>Fee ship <span>{{number_format(Session::get('fee'),0,',','.')}}</span></li> -->
 						</li></td>
 					</td>
-					<input type="hidden" id="VNDUSD" name="VND" value="{{round($total/23000,2)}}">
+					<input type="hidden" id="VNDUSD" name="VND" value="{{round(($total+Session::get('fee'))/23000,2)}}">
 						<tr><td><input type="submit" value="Update" name="btn_update" class="btn btn-default btn-sm check_out"></td></tr>
 					</tbody> 
 				</table>

@@ -27,11 +27,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- calendar -->
 <link rel="stylesheet" href="{{asset('public/backend/css/monthly.css')}}">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <!-- //calendar -->
 <!-- //font-awesome icons -->
 <script src="{{asset('public/backend/js/jquery2.0.3.min.js')}}"></script>
-<script src="{{asset('public/backend/js/raphael-min.js')}}"></script>
-<script src="{{asset('public/backend/js/morris.js')}}"></script>
 </head>
 <body>
 <section id="container">
@@ -139,7 +138,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<li><a href="{{URL::to('/listProduct')}}">Listed Product</a></li>
                     </ul>
                 </li>
-              
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Statitical</span>
+                    </a>
+                     <ul class="sub">
+						<li><a href="{{URL::to('/Statitical')}}">Add Product</a></li>
+					</ul>
+                </li>
             </ul>            </div>
 
         <!-- sidebar menu end-->
@@ -167,7 +174,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="{{asset('public/backend/js/jquery.slimscroll.js')}}"></script>
 <script src="{{asset('public/backend/js/jquery.nicescroll.js')}}"></script>
 <script src="{{asset('public/backend/ckeditor/ckeditor.js')}}"></script>
- <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		fetch_delivery();
@@ -261,6 +270,37 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
   		} );
   </script>
- 
+   <script type="text/javascript">
+  	$(document).ready(function()
+  	{
+  		var chart = new Morris.Line({
+ 		 element: 'thongke',
+ 		 lineColors:['#4ca3dd','#ffffff'],
+ 		 labelColor: '#000',
+ 		 parseTime:false,
+  		xkey: 'Times',
+  		ykeys: ['total'],
+  		labels:['total']	
+		});
+
+
+		$('#filter').click(function()
+  	{
+  		var from_date=$('#datepicker').val();
+  		var to_date=$('#datepicker2').val();
+  		var _token=$('input[name="_token"]').val();
+  		$.ajax({
+				url:'{{url('/filter-statitical')}}',
+				method:'POST',
+				dataType:"JSON",
+				data:{from_date:from_date,to_date:to_date,_token:_token},
+
+				success:function(data){
+					chart.setData(data);
+				}
+			});
+  	});
+  	});
+  </script>
 </body>
 </html>
